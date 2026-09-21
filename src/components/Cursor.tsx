@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { prefersReducedMotion } from "@/lib/motion";
 
+const DARK_SURFACE = ".bg-charcoal, .bg-primary, footer";
+
 export function Cursor() {
   const ref = useRef<HTMLDivElement | null>(null);
   const [label, setLabel] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
+  const [onDark, setOnDark] = useState(false);
 
   useEffect(() => {
     if (prefersReducedMotion()) return;
@@ -23,7 +26,9 @@ export function Cursor() {
       const overField = node?.closest?.("input, textarea, select, [contenteditable='true']");
       const target = node?.closest?.("[data-cursor]") as HTMLElement | null;
       const next = overField ? null : (target?.dataset["cursor"] ?? null);
+      const dark = Boolean(node?.closest?.(DARK_SURFACE));
       setLabel((prev) => (prev === next ? prev : next));
+      setOnDark((prev) => (prev === dark ? prev : dark));
       setVisible(!overField);
       if (!raf) {
         raf = requestAnimationFrame(() => {
@@ -55,7 +60,11 @@ export function Cursor() {
         {label ? (
           <span className="label-mono bg-primary px-3 py-1.5 text-primary-foreground">{label}</span>
         ) : (
-          <span className="block h-2 w-2 bg-charcoal" />
+          <span
+            className={`block h-2 w-2 transition-colors duration-200 ${
+              onDark ? "bg-charcoal-foreground" : "bg-charcoal"
+            }`}
+          />
         )}
       </div>
     </div>

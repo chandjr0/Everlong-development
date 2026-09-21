@@ -81,7 +81,7 @@ export function BlueprintAnimation() {
                 <span
                   key={phase}
                   data-phase={i}
-                  className="display-md absolute inset-0 text-accent opacity-0"
+                  className="display-md absolute inset-0 text-accent-bright opacity-0"
                 >
                   {phase}
                 </span>
